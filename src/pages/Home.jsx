@@ -25,7 +25,7 @@ const Home = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:8080/api/v1/posts",
+        "https://dalle-e-image-generation-backend.onrender.com/api/v1/posts",
         {
           method: "GET",
           headers: {
