@@ -24,8 +24,7 @@ const Home = () => {
     setLoading(true);
 
     try {
-      const response = await fetch(
-        "https://dalle-e-image-generation-backend.onrender.com/api/v1/posts",
+      const response = await fetch(import.meta.env.VITE_POSTS_API_URL,
         {
           method: "GET",
           headers: {

@@ -16,11 +16,12 @@ const CreatePost = () => {
   const [generatingImage, setGeneratingImage] = useState(false);
   const [loading, setLoading] = useState(false);
 
+
   const generateImage = async () => {
     if (form.prompt) {
       try {
         setGeneratingImage(true);
-        const response = await fetch("https://dalle-e-image-generation-backend.onrender.com/api/v1/dalle", {
+        const response = await fetch(import.meta.env.VITE_IMAGE_GENERATION_URL, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -52,7 +53,7 @@ const CreatePost = () => {
     if (form.prompt && form.photo) {
       setLoading(true);
       try {
-        const response = await fetch("https://dalle-e-image-generation-backend.onrender.com/api/v1/posts", {
+        const response = await fetch(import.meta.env.VITE_POSTS_API_URL, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
