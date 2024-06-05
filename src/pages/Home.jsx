@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React, { useEffect, useState } from "react";
 
 import { Card, FormField, Loader } from "../components";
@@ -25,19 +24,25 @@ const Home = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:8080/api/v1/post", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        "http://localhost:8080/api/v1/posts",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-      if (response.ok) {
-        const result = await response.json();
-        setAllPosts(result.data.reverse());
+      if (!response.ok) {
+        throw new Error("Failed to fetch posts. Please try again later.");
       }
+
+      const result = await response.json();
+      setAllPosts(result.data.reverse());
     } catch (err) {
-      alert(err);
+      console.error(err);
+      alert(err.message);
     } finally {
       setLoading(false);
     }
@@ -95,7 +100,7 @@ const Home = () => {
           <>
             {searchText && (
               <h2 className="font-medium text-[#666e75] text-xl mb-3">
-                Showing Resuls for{" "}
+                Showing Results for{" "}
                 <span className="text-[#222328]">{searchText}</span>:
               </h2>
             )}
