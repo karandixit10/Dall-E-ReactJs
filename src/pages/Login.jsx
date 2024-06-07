@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { toast } from "react-hot-toast";
+import { toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
@@ -11,6 +11,7 @@ const LoginForm = () => {
     email: "",
     password: "",
   });
+  const [token, setToken] = useState(JSON.parse(localStorage.getItem("auth")) || "");
 
   //Login User
   const loginUser = async (e) => {
@@ -18,29 +19,24 @@ const LoginForm = () => {
     const { email, password } = data;
     try {
       const response = await axios.post("/login", { email, password });
-      const responseData = response.data;
-
-      if (responseData.error) {
-        toast.error(responseData.error);
-      } else {
-        setData({});
-        toast.success("Login successful!");
-        navigate('/');
-      }
-    } catch (error) {
-      if (error.response) {
-        const errorMessage = error.response.data.message;
-        toast.error(errorMessage);
-      } else if (error.request) {
-        toast.error("Network Error");
-      } else {
-        toast.error("Internal Server Error");
-      }
+      localStorage.setItem("auth", JSON.stringify(response.data.token));
+      toast.success("Login successful!");
+      navigate("/");
+    } catch (err) {
+      console.log(err);
+      toast.error(err.message);
     }
   };
 
+  useEffect(() => {
+    if(token !== ""){
+      toast.success("You already logged in");
+      navigate("/");
+    }
+  }, []);
+
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen">
       <div className="w-full max-w-md p-8 space-y-8 bg-white shadow-lg rounded-lg">
         <h2 className="text-2xl font-bold text-center">Login to OpenAI</h2>
         <form className="mt-8 space-y-6" onSubmit={loginUser}>
@@ -88,10 +84,7 @@ const LoginForm = () => {
           </div>
         </form>
         <div className="mt-6 text-center">
-          <Link
-            to="/register"
-            className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
-          >
+          <Link to="/register" className="text-sm font-medium text-indigo-600 hover:text-indigo-500">
             Create new account
           </Link>
         </div>

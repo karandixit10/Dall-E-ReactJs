@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { preview } from "../assets";
 import { getRandomPrompt } from "../utils";
 import { FormField, Loader } from "../components";
+import NavBar from "../components/NavBar";
+import { toast } from 'react-toastify';
 
 const CreatePost = () => {
   const navigate = useNavigate();
@@ -16,6 +18,7 @@ const CreatePost = () => {
   const [generatingImage, setGeneratingImage] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const [token, setToken] = useState(JSON.parse(localStorage.getItem("auth")) || "");
 
   const generateImage = async () => {
     if (form.prompt) {
@@ -95,8 +98,17 @@ const CreatePost = () => {
     });
   };
 
+  useEffect(() => {
+    console.log(token);
+    if (token === "") {
+      navigate("/login");
+      toast.warn("Please login first to access");
+    }
+  }, [token]);
+
   return (
     <section className="max-w-7xl mx-auto">
+      <NavBar/>
       <div>
         <h1 className="font-extrabold text-[#222328] text-[32px]">Create</h1>
         <p className="mt-2 text-[#666e75] text-[16px] max-w-[500px]">

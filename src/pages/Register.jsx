@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate} from 'react-router-dom';
 import axios from "axios";
-import {toast} from "react-hot-toast";
+import { toast } from 'react-toastify';
 
-import { useNavigate} from 'react-router-dom';
 const RegisterForm = () => {
   const navigate = useNavigate();
   const [error, setError] = useState("");
+  const [ token, setToken ] = useState(JSON.parse(localStorage.getItem("auth")) || "");
 
   const [data, setData] = useState({
     name: "",
@@ -54,6 +55,13 @@ const RegisterForm = () => {
 
     setError("");
   };
+
+  useEffect(() => {
+    if(token !== ""){
+      toast.success("You already logged in");
+      navigate("/");
+    }
+  }, []);
 
   return (
     <div className="flex items-center justify-center min-h-screen">
