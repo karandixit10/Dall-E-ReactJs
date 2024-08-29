@@ -3,6 +3,7 @@ import {RouterProvider, createBrowserRouter } from "react-router-dom";
 import { Home, CreatePost, LoginForm, RegisterForm } from "./pages";
 import axios from "axios";
 import { ToastContainer } from 'react-toastify';
+import * as Sentry from '@sentry/react';
 
 // Configure axios defaults
 axios.defaults.baseURL = "http://localhost:8080";
@@ -43,4 +44,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default Sentry.withProfiler(App);
