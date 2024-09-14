@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { preview } from "../assets";
 import { getRandomPrompt } from "../utils";
 import { FormField, Loader } from "../components";
+import { toast } from "react-hot-toast"; // Add this import
 
 const CreatePost = () => {
   const navigate = useNavigate();
@@ -38,18 +39,18 @@ const CreatePost = () => {
         const data = await response.json();
         setForm({ ...form, photo: data.photo });
       } catch (err) {
-        alert(err.message);
+        toast.error(err.message);
       } finally {
         setGeneratingImage(false);
       }
     } else {
-      alert("Please provide a proper prompt");
+      toast.error("Please provide a proper prompt"); 
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (form.prompt && form.photo) {
       setLoading(true);
       try {
@@ -60,23 +61,22 @@ const CreatePost = () => {
           },
           body: JSON.stringify({ ...form }),
         });
-  
+
         if (!response.ok) {
           const errorData = await response.json();
           throw new Error(errorData.message || 'Failed to share the post');
         }
-  
-        const data = await response.json();
-        console.log(data);
-        alert("Success");
+
+        await response.json();
+        toast.success('Post shared successfully!');
         navigate("/");
       } catch (err) {
-        alert(err);
+        toast.error(err.message || 'An error occurred while sharing the post');
       } finally {
         setLoading(false);
       }
     } else {
-      alert("Please generate an image with proper details");
+      toast.error("Please generate an image with proper details");
     }
   };
 
@@ -98,8 +98,8 @@ const CreatePost = () => {
   return (
     <section className="max-w-7xl mx-auto">
       <div>
-        <h1 className="font-extrabold text-[#222328] text-[32px]">Create</h1>
-        <p className="mt-2 text-[#666e75] text-[16px] max-w-[500px]">
+        <h1 className="font-extrabold text-[#222328] dark:text-white text-[32px]">Create</h1>
+        <p className="mt-2 text-[#666e75]  dark:text-[#7a7a7a] text-[16px] max-w-[500px]">
           Create imaginative and visually stunning images through DALL-E AI and share them with the community
         </p>
       </div>
