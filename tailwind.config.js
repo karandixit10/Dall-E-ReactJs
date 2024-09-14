@@ -15,4 +15,5 @@ export const theme = {
     },
   },
 };
+export const darkMode = "class";
 export const plugins = [];
